@@ -1,0 +1,16 @@
+{
+  "name": "diptwit",
+  "version": "1.0.0",
+  "description": "a very, very hoopty software",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ex cinera",
+  "license": "GPL-2.0",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "rss-parser": "^3.4.3",
+    "twitter": "^1.7.1"
+  }
+}
