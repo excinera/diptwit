@@ -1,5 +1,5 @@
-// diptwit 0.1 
-// x. 2k18 10 01
+// diptwit 1.0
+// x. 2k18 10 01 - 2k18 10 17
 // sorry
 // gpl v2.0
 
@@ -30,8 +30,8 @@ var guids = JSON.parse(fs.readFileSync(__dirname + "/guids.log"));
 
 // Log and console output to describe program modes
 s && console.log("Running in single-post mode.");
-s && appendFileSync(__dirname + "/run.log", " [in 1-post mode] from: " + rssUrl + "\n");
-!s && appendFileSync(__dirname + "/run.log", " [in n-post mode] from: " + rssUrl + "\n");
+s && fs.appendFileSync(__dirname + "/run.log", " [in 1-post mode] from: " + rssUrl + "\n");
+!s && fs.appendFileSync(__dirname + "/run.log", " [in n-post mode] from: " + rssUrl + "\n");
 (d || v) && console.log("Starting with " + (d ? "debug " : "") + ((d * v) ? "and " : "") + (v ? "verbose " : "") + "mode enabled");
 
 // Actually getting the tweet.
