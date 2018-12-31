@@ -1,7 +1,7 @@
-// diptwit 1.0
+// diptwit 1.1
 // x. 2k18 10 01 - 2k18 10 17
-// sorry
-// gpl v2.0
+// 2k18 12 30: fixed the post modes
+// gpl v3.0
 
 var fs = require('fs'); 
 var Twitter = require('twitter');
@@ -84,6 +84,7 @@ s && console.log("Running in single-post mode.");
 s && fs.appendFileSync(__dirname + "/run.log", " [in 1-post mode] from: " + rssUrl + " with timeout " + timeout + "\n");
 !s && fs.appendFileSync(__dirname + "/run.log", " [in n-post mode] from: " + rssUrl + " with timeout " + timeout + "\n");
 (d || v) && console.log("Starting with " + (d ? "debug " : "") + ((d * v) ? "and " : "") + (v ? "verbose " : "") + "mode enabled");
+var skipTheRest = 0;
 
 // Actually getting the tweet.
 client.get('statuses/user_timeline', '{screen name: ' + twitName + '}', function(error, tweets, response) {
@@ -97,35 +98,30 @@ client.get('statuses/user_timeline', '{screen name: ' + twitName + '}', function
     // var i = 0;
     for(var k in smeti){
      item = smeti[k];
-     v && console.log(item.isoDate + ", " + item.guid + ": " + item.title + "(" + guids.indexOf(item.guid) + ")");
+     v && console.log(item.isoDate + ", " + item.guid + ": " + item.title + " (" + guids.indexOf(item.guid) + ")");
      if(guids.indexOf(item.guid) == -1) {
       // for(var j = -1; j < 1000*1000*2000*i; j++) {}
       k = smeti.length;
-      guids.push(item.guid);
-      v && console.log(item.guid);
-      v && console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " POSTING.");
+      v && console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " GUID " + item.guid + " skip: " + skipTheRest);
       var count = 0;
-      count += countInstances(item.content, " ");
-      v && console.log(count + "words");
-      function countInstances(string, word) {
-       return string.split(word).length - 1;
-       }
+      count += item.content.split(" ").length - 1;
+      v && console.log(count + " words");
       count = Math.floor(count / 300.0);
       if (count === 0) count++;
-      console.log(count);
-      client.post('statuses/update', {status: '"' + item.title + '", by ' + item.creator + " (" + count + "m read) "+ item.link})
-      .then(function (tweet) {
-       console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " " + tweet.text);
-       fs.appendFileSync(__dirname + "/run.log", now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " SENT " + tweet.text + "\n");
-       fs.writeFileSync(__dirname + "/guids.log", JSON.stringify(guids));
-       s && process.abort();
-       }) // closes tweet
-      .catch(function (error) {
-       throw error;
-       fs.writeFileSync(__dirname + "/guids.log", JSON.stringify(guids));
-       s && process.abort();
-       }) // closes error catch 
-     // i++;
+      if (skipTheRest === 0) {
+       if (s) skipTheRest++;
+       guids.push(item.guid);
+       client.post('statuses/update', {status: '"' + item.title + '", by ' + item.creator + " (" + count + "m read) "+ item.link})
+       .then(function (tweet) {
+        console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " " + tweet.text);
+        fs.appendFileSync(__dirname + "/run.log", now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " SENT " + tweet.text + "\n");
+        fs.writeFileSync(__dirname + "/guids.log", JSON.stringify(guids));
+        }) // closes tweet
+       .catch(function (error) {
+        throw error;
+        fs.writeFileSync(__dirname + "/guids.log", JSON.stringify(guids));
+        }) // closes error catch
+       } // if the "skip 'em all" flag isn't planted.
      } // closes "if untweeted GUID"
     } // closes increment loop over smeti
    })(); // closes async
@@ -135,10 +131,7 @@ client.get('statuses/user_timeline', '{screen name: ' + twitName + '}', function
    }
   } // closes if (!error)
 }); // closes client.get
-
-
 console.log("RSS url: " + rssUrl);
-
 /*
 client.post('statuses/update', {status: 'test'},  function(error, tweet, response) {
   if(error) throw error;
