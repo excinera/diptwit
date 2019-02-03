@@ -93,8 +93,8 @@ var client = new Twitter(clientAuth);
 
 // No, Mr. Node.js, I expect you to die.
 setTimeout(function() {
- console.log("Timeout reached. Ending process.");
- process.abort()
+ (d || v) && console.log("Timeout reached. Ending process.");
+ process.exit(0);
  }, timeout);
 
 // Log and console output to describe program modes
@@ -112,22 +112,22 @@ for (var asdf in rssUrls) {
  client.get('statuses/user_timeline', '{screen name: ' + twitName + '}', function(error, tweets, response) {
    if (!error) {
     //console.log(tweets);
-    v && console.log("No error");
+    d && console.log("No error");
     (async () => {
      let feed = await parser.parseURL(rssUrls[asdf]);
      var smeti = feed.items.reverse();
-     v && console.log(guids);
+     d && console.log(guids);
      // var i = 0;
      for(var k in smeti){
       item = smeti[k];
-      v && console.log(item.isoDate + ", " + item.guid + ": " + item.title + " (" + guids.indexOf(item.guid) + ")");
+      d && console.log(item.isoDate + ", " + item.guid + ": " + item.title + " (" + guids.indexOf(item.guid) + ")");
       if(guids.indexOf(item.guid) == -1) {
        // for(var j = -1; j < 1000*1000*2000*i; j++) {}
        k = smeti.length;
-       v && console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " GUID " + item.guid + " skip: " + skipAllRest);
+       (d || v) && console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " GUID " + item.guid + " skip: " + skipAllRest);
        var count = 0;
        count += item.content.split(" ").length - 1;
-       v && console.log(count + " words");
+       d && console.log(count + " words");
        count = Math.floor(count / 300.0);
        if (count === 0) count++;
        if (skipAllRest === 0 && skipTheRest === 0) {
@@ -136,7 +136,7 @@ for (var asdf in rssUrls) {
         guids.push(item.guid);
         client.post('statuses/update', {status: '"' + item.title + '", by ' + item.creator + " (" + count + "m read) "+ item.link})
         .then(function (tweet) {
-         console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " " + tweet.text);
+         (d || v) && console.log(now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " " + tweet.text);
          fs.appendFileSync(__dirname + "/run.log", now().format("[YYYY-MM-DD") + "T" + now().format("HH:mm:ss]") + " SENT " + tweet.text + "\n");
          fs.writeFileSync(__dirname + "/guids.log", JSON.stringify(guids));
          }) // closes tweet
@@ -145,6 +145,10 @@ for (var asdf in rssUrls) {
          fs.writeFileSync(__dirname + "/guids.log", JSON.stringify(guids));
          }) // closes error catch
         } // if the "skip 'em all" flag isn't planted.
+        else if (skipAllRest > 0) {
+        (d || v) && console.log("Terminating program.");
+        process.exit(0);
+        }
       } // closes "if untweeted GUID"
      } // closes increment loop over smeti
     })(); // closes async
