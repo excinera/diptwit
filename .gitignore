@@ -5,3 +5,4 @@ rssUrl.txt
 config.json
 node_modules/*
 data/*
+data/discord/*
