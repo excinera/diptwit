@@ -1,5 +1,6 @@
 # Things for Git to ignore when I commit diptwit!
 *.log
+discordAuth.json
 clientAuth.json
 rssUrl.txt
 config.json
