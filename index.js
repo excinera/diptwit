@@ -102,15 +102,15 @@ setTimeout(function() {
  }, timeout);
 
 // Log and console output to describe program modes
-s && console.log("Running in single-post mode over " + rssUrls.length + "RSS URLs.");
-!s && console.log("Running in multi-post mode over " + rssUrls.length + "RSS URLs.");
+s && console.log("Running in single-post mode over " + rssUrls.length + " RSS URLs.");
+!s && console.log("Running in multi-post mode over " + rssUrls.length + " RSS URLs.");
 (d || v) && console.log("Starting with " + (d ? "debug " : "") + ((d * v) ? "and " : "") + (v ? "verbose " : "") + "mode enabled");
 var skipAllRest = 0;
 var skipTheRest = []; 
  // Actually getting the tweets.
  client.get('statuses/user_timeline', '{screen name: ' + twitName + '}', function(error, tweets, response) {
   if (!error) {
-   d && console.log("No error");
+   d && console.log("Fetched timeline for " + twitName + "!");
    for (var asdf in rssUrls) {
     console.log(asdf + " RQ RSS " + rssUrls[asdf]);
     s && fs.appendFileSync(__dirname + "/run.log", " [in 1-post mode] from: " + rssUrls[asdf] + " with timeout " + timeout + "\n");
@@ -152,7 +152,7 @@ var skipTheRest = [];
         } // if the "skip 'em all" flag isn't planted.
         else if (skipAllRest > 0) {
         (d || v) && console.log("Terminating program.");
-        process.exit(0);
+        setTimeout(function() {process.exit(0);}, 5000);
         } // if skipAllRest is set
       } // closes "if untweeted GUID"
      } // closes increment loop over smeti
