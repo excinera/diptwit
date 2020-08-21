@@ -37,14 +37,14 @@ w = w ? 1 : 0;
 if (h) {
  console.log(versionid + " / x. cinera 2k19 / GPL v3");
  console.log("Usage: node " + path.basename(__filename) + " [-d / -t]   [-h] [-s] [-v]")
- console.log("  -d, discord     | Post to Discord channel.")
- console.log("  -t, twitter     | Post to Twitter feed.")
- console.log(" "),
- console.log("  -h, help        | Display help menu and exit")
- console.log("  -r, restrict    | Post a maximum of one Tweet per feed.")
- console.log("  -s, single      | Post a maximum of one Tweet in total.")
- console.log("  -v, verbose     | Run with verbose logging enabled.")
- console.log("  -w, way verbose | Debug mode; log *everything*.")
+ console.log("  -d, discord     | Post to Discord channel.");
+ console.log("  -t, twitter     | Post to Twitter feed.");
+ console.log(" ");
+ console.log("  -h, help        | Display help menu and exit");
+ console.log("  -r, restrict    | Post a maximum of one Tweet per feed.");
+ console.log("  -s, single      | Post a maximum of one Tweet in total.");
+ console.log("  -v, verbose     | Run with verbose logging enabled.");
+ console.log("  -w, way verbose | Debug mode; log *everything*.");
  process.exit(0);
  } // If help flag is set, print command flags and exit.
 
