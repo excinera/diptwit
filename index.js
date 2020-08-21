@@ -16,13 +16,17 @@ fs.appendFileSync(__dirname + "/run.log", "\n" + now().format("[YYYY-MM-DD") + "
 
 // Set variables from process arguments.
 var v = (process.argv.indexOf('v') + process.argv.indexOf('-v') + 2);
+// If either version of the flag has been included as an argument, this will return an arbitrary positive integer. Otherwise, it will return zero.
+
 var d = (process.argv.indexOf('d') + process.argv.indexOf('-d') + 2);
 var t = (process.argv.indexOf('t') + process.argv.indexOf('-t') + 2);
 var r = (process.argv.indexOf('r') + process.argv.indexOf('-r') + 2);
 var s = (process.argv.indexOf('s') + process.argv.indexOf('-s') + 2);
 var h = (process.argv.indexOf('h') + process.argv.indexOf('-h') + 2);
 var w = (process.argv.indexOf('w') + process.argv.indexOf('-w') + 2);
+
 v = v ? 1 : 0;
+// If "v" is anything besides 0, this line sets it to 1.
 d = d ? 1 : 0;  
 r = r ? 1 : 0; 
 s = s ? 1 : 0;  
